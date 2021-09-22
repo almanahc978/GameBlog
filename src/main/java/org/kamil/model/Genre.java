@@ -4,14 +4,19 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Genre extends BaseEntity {
 
+	@NotBlank(message = "Field 'Name' must not be blank")
 	private String name;
 
-	@OneToMany(mappedBy = "genre", fetch = FetchType.LAZY)
+	private String description;
+
+	@ManyToMany(mappedBy = "genre")
 	private List<Game> games;
 
 	public String getName() {
@@ -28,6 +33,14 @@ public class Genre extends BaseEntity {
 
 	public void setGames(List<Game> games) {
 		this.games = games;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

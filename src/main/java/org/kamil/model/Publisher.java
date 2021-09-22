@@ -4,15 +4,20 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Publisher extends BaseEntity {
 
+	@NotBlank(message = "Field 'Name' must not be blank")
 	private String name;
 
+	private String description;
+	
 	@OneToMany(mappedBy = "publisher")
-	private List<GamePublisher> gamePublishers;
+	private List<Game> games;
 
+	
 	public String getName() {
 		return name;
 	}
@@ -21,12 +26,22 @@ public class Publisher extends BaseEntity {
 		this.name = name;
 	}
 
-	public List<GamePublisher> getGamePublishers() {
-		return gamePublishers;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setGamePublishers(List<GamePublisher> gamePublishers) {
-		this.gamePublishers = gamePublishers;
+	public void setDescription(String description) {
+		this.description = description;
 	}
+
+	public List<Game> getGames() {
+		return games;
+	}
+
+	public void setGames(List<Game> games) {
+		this.games = games;
+	}
+	
+	
 
 }

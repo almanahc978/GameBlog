@@ -8,8 +8,8 @@ public interface IGameService {
 
 	Game getById(Integer id);
 	List<Game> getAll();
-	List<Game> findGamesByName(String name);
-	void add(Game game);
-	void update(Game game);
-	void delete(Game game);
+	List<Game> getByName(String name);
+	Game add(Game game);
+	Game update(Game newGame, Integer id);
+	void delete(Integer id);
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.kamil.exception.NoDataFoundException;
+import org.kamil.exception.NoGameFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,10 +20,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-	/* *
-	 * When no data was found
+	/*
+	 * * When no data was found
 	 */
-	
+
 	@ExceptionHandler(value = { NoDataFoundException.class })
 	protected ResponseEntity<Object> handleNoDataFoundException(NoDataFoundException ex, WebRequest request) {
 		Map<String, Object> body = new LinkedHashMap<>();
@@ -32,9 +33,23 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 		return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
 	}
 
-	/* *
-	 * When validation on argument with @Valid fails
+	/*
+	 * * When no game was found
 	 */
+
+	@ExceptionHandler(value = { NoGameFoundException.class })
+	protected ResponseEntity<Object> handleNoGameFoundException(NoGameFoundException ex, WebRequest request) {
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put("timeStamp", LocalDateTime.now());
+		body.put("message", "No game with given ID was found");
+
+		return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+	}
+
+	/*
+	 * * When validation on argument with @Valid fails
+	 */
+
 	
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
