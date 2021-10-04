@@ -1,4 +1,4 @@
-package org.kamil.service;
+package org.kamil.service.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,17 +9,22 @@ import org.kamil.exception.NoDataFoundException;
 import org.kamil.exception.NoGameFoundException;
 import org.kamil.model.Game;
 import org.kamil.repository.GameRepository;
+import org.kamil.service.IServiceCrud;
+import org.kamil.validation.ValidationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GameServiceImpl implements IGameService {
+public class GameServiceImpl implements IServiceCrud<Game> {
 
 	private final GameRepository gameRepository;
+	
+	private final ValidationFacade validationFacade;
 
 	@Autowired
-	public GameServiceImpl(GameRepository gameRepository) {
+	public GameServiceImpl(GameRepository gameRepository, ValidationFacade validationFacade) {
 		this.gameRepository = gameRepository;
+		this.validationFacade = validationFacade;
 	}
 
 	@Override
@@ -29,7 +34,7 @@ public class GameServiceImpl implements IGameService {
 
 	@Override
 	public List<Game> getAll() {
-		List<Game> allGames = gameRepository.findAll().stream().collect(Collectors.toList());
+		List<Game> allGames = gameRepository.findAll();
 		if (allGames.isEmpty()) {
 			throw new NoDataFoundException();
 		}
@@ -38,7 +43,7 @@ public class GameServiceImpl implements IGameService {
 
 	@Override
 	public List<Game> getByName(String name) {
-		List<Game> games = gameRepository.findAllByName(name).stream().collect(Collectors.toList());
+		List<Game> games = gameRepository.findByNameContaining(name);
 		if (games.isEmpty()) {
 			throw new NoDataFoundException();
 		}
@@ -47,11 +52,14 @@ public class GameServiceImpl implements IGameService {
 
 	@Override
 	public Game add(Game game) {
+		validationFacade.validate(game);
 		return gameRepository.save(game);
 	}
 
 	@Override
 	public Game update(Game newGame, Integer id) {
+		validationFacade.validate(newGame);
+		
 		return gameRepository.findById(id).map(game -> {
 			game.setName(newGame.getName());
 			game.setDescription(newGame.getDescription());

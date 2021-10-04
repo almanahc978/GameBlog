@@ -7,13 +7,20 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Genre extends BaseEntity {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@NotBlank(message = "Field 'Name' must not be blank")
 	private String name;
 
+	@Size(min = 10, max = 200, message = "Field 'Description' must be between 10 and 20 characters")
 	private String description;
 
 	@ManyToMany(mappedBy = "genre")

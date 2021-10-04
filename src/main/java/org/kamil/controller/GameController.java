@@ -5,12 +5,15 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.kamil.conversion.GameModelAssembler;
 import org.kamil.model.Game;
-import org.kamil.service.GameServiceImpl;
+import org.kamil.service.impl.GameServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,48 +28,54 @@ import org.springframework.web.bind.annotation.RestController;
 public class GameController {
 
 	private final GameServiceImpl gameServiceImpl;
+	private final GameModelAssembler gameModelAssembler;
 
 	@Autowired
-	public GameController(GameServiceImpl gameServiceImpl) {
+	public GameController(GameServiceImpl gameServiceImpl, GameModelAssembler gameModelAssembler) {
 		this.gameServiceImpl = gameServiceImpl;
+		this.gameModelAssembler = gameModelAssembler;
 	}
 
-	@GetMapping("/games")
+	@GetMapping("/games/all")
 	public CollectionModel<EntityModel<Game>> getAll() {
-		List<EntityModel<Game>> games = gameServiceImpl.getAll().stream().map(game -> EntityModel.of(game,
-				WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GameController.class).getById(game.getId()))
-						.withSelfRel(),
-				WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GameController.class).getAll()).withRel("games")))
+		List<EntityModel<Game>> games = gameServiceImpl.getAll().stream().map(gameModelAssembler::toModel)
 				.collect(Collectors.toList());
 
 		return CollectionModel.of(games,
 				WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GameController.class).getAll()).withSelfRel());
 	}
 
-	@GetMapping("/games/{name}")
-	public List<Game> getByName(@PathVariable String name) {
-		return gameServiceImpl.getByName(name);
+	@GetMapping("/games/name/{name}")
+	public CollectionModel<EntityModel<Game>> getByName(@PathVariable String name) {
+		List<EntityModel<Game>> games = gameServiceImpl.getByName(name).stream().map(gameModelAssembler::toModel)
+				.collect(Collectors.toList());
+
+		return CollectionModel.of(games,
+				WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GameController.class).getAll()).withSelfRel());
 	}
 
 	@GetMapping("/games/id/{id}")
 	public EntityModel<Game> getById(@PathVariable Integer id) {
-		return EntityModel.of(gameServiceImpl.getById(id),
-				WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GameController.class).getById(id)).withSelfRel(),
-				WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GameController.class).getAll()).withRel("games"));
+		return gameModelAssembler.toModel(gameServiceImpl.getById(id));
 	}
 
 	@PostMapping("/games/add")
-	public Game add(@Valid @RequestBody Game game) {
-		return gameServiceImpl.add(game);
+	public ResponseEntity<?> add(@Valid @RequestBody Game game) {
+
+		EntityModel<Game> entityModel = gameModelAssembler.toModel(gameServiceImpl.add(game));
+		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
 	}
 
 	@PutMapping("/games/update/{id}")
-	public Game update(@Valid @RequestBody Game game, @PathVariable Integer id) {
-		return gameServiceImpl.update(game, id);
+	public ResponseEntity<?> update(@Valid @RequestBody Game game, @PathVariable Integer id) {
+		EntityModel<Game> entityModel = gameModelAssembler.toModel(gameServiceImpl.update(game, id));
+
+		return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
 	}
 
 	@DeleteMapping("/games/delete/{id}")
-	public void delete(@PathVariable Integer id) {
+	public ResponseEntity<?> delete(@PathVariable Integer id) {
 		gameServiceImpl.delete(id);
+		return ResponseEntity.noContent().build();
 	}
 }

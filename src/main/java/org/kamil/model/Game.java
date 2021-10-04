@@ -12,9 +12,15 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-
+import javax.validation.constraints.Size
+;
 @Entity
 public class Game extends BaseEntity {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public Game() {
 
@@ -27,8 +33,28 @@ public class Game extends BaseEntity {
 	@NotBlank(message = "Field 'Name' must not be blank")
 	private String name;
 
+	@Size(min = 10, max = 1000, message = "Field 'Description' must be between 10 and 1000 characters")
 	private String description;
 
+	
+	private LocalDate releaseDate;
+	
+	@Min(value = 0, message = "Rating must be greater than 0")
+	@Max(value = 100, message = "Rating can't be greater than 100")
+	private int rating;
+	
+	@ManyToMany
+	@JoinTable(name = "game_genre", joinColumns = @JoinColumn(name = "game_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
+	private List<Genre> genre;
+	
+	@ManyToMany
+	@JoinTable(name = "game_platform", joinColumns = @JoinColumn(name = "game_id"), inverseJoinColumns = @JoinColumn(name = "platform_id"))
+	private List<Platform> platform;
+	
+	@ManyToOne
+	@JoinColumn(name = "publisher_name", referencedColumnName = "name")
+	private Publisher publisher;
+	
 	public LocalDate getReleaseDate() {
 		return releaseDate;
 	}
@@ -45,23 +71,6 @@ public class Game extends BaseEntity {
 		this.rating = rating;
 	}
 
-	private LocalDate releaseDate;
-
-	@Min(value = 0, message = "Rating must be greater than 0")
-	@Max(value = 100, message = "Rating can't be greater than 100")
-	private int rating;
-
-	@ManyToMany
-	@JoinTable(name = "game_genre", joinColumns = @JoinColumn(name = "game_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
-	private List<Genre> genre;
-
-	@ManyToMany
-	@JoinTable(name = "game_platform", joinColumns = @JoinColumn(name = "game_id"), inverseJoinColumns = @JoinColumn(name = "platform_id"))
-	private List<Platform> platform;
-
-	@ManyToOne
-	@JoinColumn(name = "publisher_name", referencedColumnName = "name")
-	private Publisher publisher;
 
 	public String getName() {
 		return name;
