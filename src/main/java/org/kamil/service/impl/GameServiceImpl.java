@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import javax.websocket.Session;
 
 import org.kamil.exception.NoDataFoundException;
-import org.kamil.exception.NoGameFoundException;
+import org.kamil.exception.GameNoFoundException;
 import org.kamil.model.Game;
 import org.kamil.repository.GameRepository;
 import org.kamil.service.IServiceCrud;
@@ -29,7 +29,7 @@ public class GameServiceImpl implements IServiceCrud<Game> {
 
 	@Override
 	public Game getById(Integer id) {
-		return gameRepository.findById(id).orElseThrow(() -> new NoGameFoundException(id));
+		return gameRepository.findById(id).orElseThrow(() -> new GameNoFoundException(id));
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class GameServiceImpl implements IServiceCrud<Game> {
 			game.setReleaseDate(newGame.getReleaseDate());
 			game.setRating(newGame.getRating());
 			game.setPublisher(newGame.getPublisher());
-			return gameRepository.save(newGame);
+			return gameRepository.save(game);
 		}).orElseGet(() -> {
 			newGame.setId(id);
 			return gameRepository.save(newGame);

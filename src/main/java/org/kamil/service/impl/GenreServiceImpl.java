@@ -58,7 +58,7 @@ public class GenreServiceImpl implements IServiceCrud<Genre> {
 		return genreRepository.findById(id).map(genre -> {
 			genre.setName(newGenre.getName());
 			genre.setDescription(newGenre.getDescription());
-			return genreRepository.save(newGenre);
+			return genreRepository.save(genre);
 		}).orElseGet(() -> {
 			newGenre.setId(id);
 			return genreRepository.save(newGenre);

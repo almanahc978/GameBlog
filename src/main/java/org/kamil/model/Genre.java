@@ -20,11 +20,20 @@ public class Genre extends BaseEntity {
 	@NotBlank(message = "Field 'Name' must not be blank")
 	private String name;
 
-	@Size(min = 10, max = 200, message = "Field 'Description' must be between 10 and 20 characters")
+	@Size(min = 10, max = 200, message = "Field 'Description' must be between 10 and 200 characters")
 	private String description;
 
 	@ManyToMany(mappedBy = "genre")
 	private List<Game> games;
+
+	public Genre() {
+
+	}
+
+	public Genre(String name, String description) {
+		this.name = name;
+		this.description = description;
+	}
 
 	public String getName() {
 		return name;
@@ -48,6 +57,11 @@ public class Genre extends BaseEntity {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	@Override
+	public String toString() {
+		return "Genre [name=" + name + ", description=" + description + ", games=" + games + "]";
 	}
 
 }

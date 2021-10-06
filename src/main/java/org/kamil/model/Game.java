@@ -1,6 +1,7 @@
 package org.kamil.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,8 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size
-;
+import javax.validation.constraints.Size;
+
 @Entity
 public class Game extends BaseEntity {
 
@@ -21,6 +22,30 @@ public class Game extends BaseEntity {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	@NotBlank(message = "Field 'Name' must not be blank")
+	private String name;
+
+	@Size(min = 10, max = 1000, message = "Field 'Description' must be between 10 and 1000 characters")
+	private String description;
+
+	private LocalDate releaseDate;
+
+	@Min(value = 0, message = "Rating must be greater than 0")
+	@Max(value = 100, message = "Rating can't be greater than 100")
+	private int rating;
+
+	@ManyToMany
+	@JoinTable(name = "game_genre", joinColumns = @JoinColumn(name = "game_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
+	private List<Genre> genre = new ArrayList<>();
+
+	@ManyToMany
+	@JoinTable(name = "game_platform", joinColumns = @JoinColumn(name = "game_id"), inverseJoinColumns = @JoinColumn(name = "platform_id"))
+	private List<Platform> platform = new ArrayList<>();
+
+	@ManyToOne
+	@JoinColumn(name = "publisher_name", referencedColumnName = "name")
+	private Publisher publisher;
 
 	public Game() {
 
@@ -30,31 +55,13 @@ public class Game extends BaseEntity {
 		this.name = name;
 	}
 
-	@NotBlank(message = "Field 'Name' must not be blank")
-	private String name;
+	public Game(String name, String description, LocalDate releaseDate, int rating) {
+		this.name = name;
+		this.description = description;
+		this.releaseDate = releaseDate;
+		this.rating = rating;
+	}
 
-	@Size(min = 10, max = 1000, message = "Field 'Description' must be between 10 and 1000 characters")
-	private String description;
-
-	
-	private LocalDate releaseDate;
-	
-	@Min(value = 0, message = "Rating must be greater than 0")
-	@Max(value = 100, message = "Rating can't be greater than 100")
-	private int rating;
-	
-	@ManyToMany
-	@JoinTable(name = "game_genre", joinColumns = @JoinColumn(name = "game_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
-	private List<Genre> genre;
-	
-	@ManyToMany
-	@JoinTable(name = "game_platform", joinColumns = @JoinColumn(name = "game_id"), inverseJoinColumns = @JoinColumn(name = "platform_id"))
-	private List<Platform> platform;
-	
-	@ManyToOne
-	@JoinColumn(name = "publisher_name", referencedColumnName = "name")
-	private Publisher publisher;
-	
 	public LocalDate getReleaseDate() {
 		return releaseDate;
 	}
@@ -70,7 +77,6 @@ public class Game extends BaseEntity {
 	public void setRating(int rating) {
 		this.rating = rating;
 	}
-
 
 	public String getName() {
 		return name;
@@ -110,6 +116,14 @@ public class Game extends BaseEntity {
 
 	public void setPublisher(Publisher publisher) {
 		this.publisher = publisher;
+	}
+
+	public void addGenre(Genre genre) {
+		this.genre.add(genre);
+	}
+
+	public void addPlatform(Platform platform) {
+		this.platform.add(platform);
 	}
 
 	@Override

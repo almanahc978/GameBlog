@@ -23,6 +23,15 @@ public class Platform extends BaseEntity {
 
 	@ManyToMany(mappedBy = "platform")
 	private List<Game> games;
+	
+	public Platform() {
+
+	}
+
+	public Platform(String name, String description) {
+		this.name = name;
+		this.description = description;
+	}
 
 	public String getName() {
 		return name;
@@ -47,6 +56,10 @@ public class Platform extends BaseEntity {
 	public void setGames(List<Game> games) {
 		this.games = games;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Platform [name=" + name + ", description=" + description + ", games=" + games + "]";
+	}
 
 }

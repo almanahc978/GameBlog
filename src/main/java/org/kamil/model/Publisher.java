@@ -20,11 +20,19 @@ public class Publisher extends BaseEntity {
 
 	@Size(min = 10, max = 200, message = "Field 'Description' must be between 10 and 200 characters")
 	private String description;
-	
+
 	@OneToMany(mappedBy = "publisher")
 	private List<Game> games;
 
-	
+	public Publisher() {
+
+	}
+
+	public Publisher(String name, String description) {
+		this.name = name;
+		this.description = description;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -48,7 +56,11 @@ public class Publisher extends BaseEntity {
 	public void setGames(List<Game> games) {
 		this.games = games;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "Publisher [name=" + name + ", description=" + description + ", games=" + games + "]";
+	}
+
 
 }
