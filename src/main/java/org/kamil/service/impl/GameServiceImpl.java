@@ -1,6 +1,7 @@
 package org.kamil.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.websocket.Session;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class GameServiceImpl implements IServiceCrud<Game> {
 
 	private final GameRepository gameRepository;
-	
+
 	private final ValidationFacade validationFacade;
 
 	@Autowired
@@ -59,7 +60,7 @@ public class GameServiceImpl implements IServiceCrud<Game> {
 	@Override
 	public Game update(Game newGame, Integer id) {
 		validationFacade.validate(newGame);
-		
+
 		return gameRepository.findById(id).map(game -> {
 			game.setName(newGame.getName());
 			game.setDescription(newGame.getDescription());
