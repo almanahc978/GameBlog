@@ -49,7 +49,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	/*
 	 * * When validation on argument with @Valid fails
 	 */
-
 	
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {

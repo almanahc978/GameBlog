@@ -49,17 +49,9 @@ public class Publisher extends BaseEntity {
 		this.description = description;
 	}
 
-	public List<Game> getGames() {
-		return games;
-	}
-
-	public void setGames(List<Game> games) {
-		this.games = games;
-	}
-
 	@Override
 	public String toString() {
-		return "Publisher [name=" + name + ", description=" + description + ", games=" + games + "]";
+		return "Publisher [name=" + name + ", description=" + description;
 	}
 
 

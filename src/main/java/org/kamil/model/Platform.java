@@ -20,9 +20,6 @@ public class Platform extends BaseEntity {
 
 	@Size(min = 10, max = 200, message = "Field 'Description' must be between 10 and 200 characters")
 	private String description;
-
-	@ManyToMany(mappedBy = "platform")
-	private List<Game> games;
 	
 	public Platform() {
 
@@ -49,17 +46,9 @@ public class Platform extends BaseEntity {
 		this.description = description;
 	}
 
-	public List<Game> getGames() {
-		return games;
-	}
-
-	public void setGames(List<Game> games) {
-		this.games = games;
-	}
-
 	@Override
 	public String toString() {
-		return "Platform [name=" + name + ", description=" + description + ", games=" + games + "]";
+		return "Platform [name=" + name + ", description=" + description;
 	}
 
 }

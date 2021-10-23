@@ -1,19 +1,14 @@
 package org.kamil.model;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Game extends BaseEntity {
@@ -35,7 +30,7 @@ public class Game extends BaseEntity {
 	@Max(value = 100, message = "Rating can't be greater than 100")
 	private int rating;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "game_genre", joinColumns = @JoinColumn(name = "game_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
 	private List<Genre> genre = new ArrayList<>();
 
@@ -62,6 +57,22 @@ public class Game extends BaseEntity {
 		this.rating = rating;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public LocalDate getReleaseDate() {
 		return releaseDate;
 	}
@@ -78,28 +89,12 @@ public class Game extends BaseEntity {
 		this.rating = rating;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public List<Genre> getGenre() {
 		return genre;
 	}
 
 	public void setGenre(List<Genre> genre) {
 		this.genre = genre;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public List<Platform> getPlatform() {

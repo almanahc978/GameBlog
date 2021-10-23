@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface GameRepository extends JpaRepository<Game, Integer> {
 
 	List<Game> findByNameContaining(String name);
+
 }

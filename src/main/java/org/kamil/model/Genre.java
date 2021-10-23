@@ -23,8 +23,6 @@ public class Genre extends BaseEntity {
 	@Size(min = 10, max = 200, message = "Field 'Description' must be between 10 and 200 characters")
 	private String description;
 
-	@ManyToMany(mappedBy = "genre")
-	private List<Game> games;
 
 	public Genre() {
 
@@ -35,20 +33,16 @@ public class Genre extends BaseEntity {
 		this.description = description;
 	}
 
-	public String getName() {
+    public Genre(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public List<Game> getGames() {
-		return games;
-	}
-
-	public void setGames(List<Game> games) {
-		this.games = games;
 	}
 
 	public String getDescription() {
@@ -59,9 +53,10 @@ public class Genre extends BaseEntity {
 		this.description = description;
 	}
 
+
 	@Override
 	public String toString() {
-		return "Genre [name=" + name + ", description=" + description + ", games=" + games + "]";
+		return "Genre [name=" + name + ", description=" + description;
 	}
 
 }

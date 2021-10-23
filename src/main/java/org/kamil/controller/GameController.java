@@ -7,7 +7,7 @@ import javax.validation.Valid;
 
 import org.kamil.conversion.GameModelAssembler;
 import org.kamil.model.Game;
-import org.kamil.service.impl.GameServiceImpl;
+import org.kamil.service.impl.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -24,19 +24,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping(value = "/api", produces = {"application/hall+json"})
 public class GameController {
 
-	private final GameServiceImpl gameServiceImpl;
+	private final GameService gameServiceImpl;
 	private final GameModelAssembler gameModelAssembler;
 
 	@Autowired
-	public GameController(GameServiceImpl gameServiceImpl, GameModelAssembler gameModelAssembler) {
+	public GameController(GameService gameServiceImpl, GameModelAssembler gameModelAssembler) {
 		this.gameServiceImpl = gameServiceImpl;
 		this.gameModelAssembler = gameModelAssembler;
 	}
 
-	@GetMapping("/games/all")
+	@GetMapping(value = "/games/all")
 	public CollectionModel<EntityModel<Game>> getAll() {
 		List<EntityModel<Game>> games = gameServiceImpl.getAll().stream().map(gameModelAssembler::toModel)
 				.collect(Collectors.toList());
@@ -45,7 +45,8 @@ public class GameController {
 				WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(GameController.class).getAll()).withSelfRel());
 	}
 
-	@GetMapping("/games/name/{name}")
+
+	@GetMapping(value = "/games/name/{name}")
 	public CollectionModel<EntityModel<Game>> getByName(@PathVariable String name) {
 		List<EntityModel<Game>> games = gameServiceImpl.getByName(name).stream().map(gameModelAssembler::toModel)
 				.collect(Collectors.toList());

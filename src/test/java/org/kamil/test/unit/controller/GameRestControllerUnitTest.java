@@ -39,18 +39,6 @@ public class GameRestControllerUnitTest {
 	@Test
 	void getAllTest() throws Exception {
 
-		Game game = new Game();
-		game.setName("Game");
-
-		CollectionModel<EntityModel<Game>> games = CollectionModel
-				.of(Arrays.asList(gameModelAssembler.toModel(game)));
-
-		BDDMockito.given(gameController.getAll()).willReturn(games);
-
-		mvc.perform(get("/api/games/all")).andExpect(status().isOk())
-				.andExpect(jsonPath("$game.name", is(game.getName())));
-
-		 
 	}
 
 }

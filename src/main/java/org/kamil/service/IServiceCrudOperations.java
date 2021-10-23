@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.kamil.model.Game;
 
-public interface IServiceCrud<T> {
+public interface IServiceCrudOperations<T> {
 
 	T getById(Integer id);
 	List<T> getAll();
